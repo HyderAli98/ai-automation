@@ -1,0 +1,70 @@
+# Z440 FRESH START - SAFE INSTRUCTIONS
+
+## IMPORTANT: Two Separate Scripts
+
+### SCRIPT 1: CLEANUP-FIRST.sh (OPTIONAL - ONLY IF YOU WANT TO DELETE DATA)
+
+⚠️ **WARNING:** Only run this if you want to PERMANENTLY delete all n8n data!
+
+```bash
+cd /e/ai/projects
+bash CLEANUP-FIRST.sh
+```
+
+You will be asked to type "DELETE ALL DATA" to confirm.
+If you just press Enter, nothing will be deleted.
+
+### SCRIPT 2: SETUP-FRESH.sh (SAFE - KEEPS DATA)
+
+This script is SAFE to run anytime. It will:
+- Create/update docker-compose.yml
+- Create/update README.md
+- Start n8n containers
+- Keep all your existing data
+
+```bash
+bash SETUP-FRESH.sh
+```
+
+Can be run multiple times without losing data!
+
+---
+
+## TYPICAL WORKFLOW
+
+**First time setup:**
+```bash
+bash SETUP-FRESH.sh
+```
+
+**Later, to add updates:**
+```bash
+bash SETUP-FRESH.sh
+```
+
+**Only if you want to completely reset:**
+```bash
+bash CLEANUP-FIRST.sh  # Type: DELETE ALL DATA
+bash SETUP-FRESH.sh
+```
+
+---
+
+## VERIFY
+
+Check containers:
+```bash
+docker ps
+```
+
+Access n8n:
+http://localhost:5678
+
+---
+
+## YOUR DATA IS SAFE
+
+- Running SETUP-FRESH.sh multiple times = no data loss
+- Only CLEANUP-FIRST.sh can delete data (requires confirmation)
+- Your n8n workflows are in Docker volumes
+- Backups go to n8n-backup.sql
