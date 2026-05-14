@@ -1,11 +1,35 @@
 #!/bin/bash
 # COMPLETE CLEANUP SCRIPT FOR Z440
-# Run this FIRST to delete everything
+# WARNING: This will DELETE ALL n8n data PERMANENTLY!
+# Only run this if you want to start completely fresh
 
+echo ""
 echo "=========================================="
-echo "WARNING: This will DELETE ALL n8n data!"
+echo "⚠️  WARNING: DATA DELETION SCRIPT"
 echo "=========================================="
 echo ""
+echo "This script will DELETE:"
+echo "  - All n8n containers"
+echo "  - All n8n volumes (data)"
+echo "  - All n8n PostgreSQL data"
+echo "  - All old project files"
+echo ""
+echo "This action CANNOT be undone!"
+echo ""
+read -p "Type 'DELETE ALL DATA' to continue (or press Enter to cancel): " confirm
+
+if [ "$confirm" != "DELETE ALL DATA" ]; then
+    echo ""
+    echo "Cleanup cancelled. No files were deleted."
+    exit 0
+fi
+
+echo ""
+echo "=========================================="
+echo "Starting cleanup... (This will take a moment)"
+echo "=========================================="
+echo ""
+
 echo "Stopping all containers..."
 docker-compose down -v 2>/dev/null || true
 
@@ -42,6 +66,8 @@ docker system prune -f 2>/dev/null || true
 
 echo ""
 echo "=========================================="
-echo "CLEANUP COMPLETE!"
-echo "All n8n data and old files deleted."
+echo "✓ CLEANUP COMPLETE!"
+echo "All n8n data and old files have been deleted."
 echo "=========================================="
+echo ""
+echo "Next step: Run SETUP-FRESH.sh to create new n8n setup"

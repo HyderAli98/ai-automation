@@ -1,9 +1,10 @@
 #!/bin/bash
-# FRESH n8n SETUP FOR Z440
-# Run this AFTER cleanup script
+# FRESH n8n SETUP FOR Z440 (WITHOUT CLEANUP)
+# This creates fresh n8n but keeps existing data safe
+# Run CLEANUP-FIRST.sh separately if you want to delete data
 
 echo "=========================================="
-echo "Setting up fresh n8n on Z440"
+echo "Starting fresh n8n setup..."
 echo "=========================================="
 echo ""
 
@@ -126,16 +127,30 @@ __pycache__
 .venv
 EOF
 
-# Initialize Git
-echo "Initializing Git..."
-git init
-git config user.name "Hyder Ali"
-git config user.email "hyderali.bitsquare@gmail.com"
-git add .
-git commit -m "Fresh n8n setup - clean start"
-git branch -M main
-git remote add origin https://github.com/HyderAli98/ai-automation.git
-git push --force -u origin main
+# Initialize Git (only if not already initialized)
+if [ ! -d .git ]; then
+    echo "Initializing Git..."
+    git init
+    git config user.name "Hyder Ali"
+    git config user.email "hyderali.bitsquare@gmail.com"
+    git add .
+    git commit -m "Fresh n8n setup - clean start"
+    git branch -M main
+    git remote add origin https://github.com/HyderAli98/ai-automation.git
+    git push --force -u origin main
+else
+    echo "Git already initialized. Updating files..."
+    git add docker-compose.yml README.md .gitignore
+    git commit -m "Update n8n setup" || true
+    git push origin main
+fi
+
+echo ""
+echo "Checking if containers exist..."
+if [ "$(docker ps -a -q -f name=n8n-app)" ]; then
+    echo "Stopping existing containers..."
+    docker-compose down
+fi
 
 echo ""
 echo "Starting Docker containers..."
@@ -150,6 +165,10 @@ docker ps
 
 echo ""
 echo "=========================================="
-echo "FRESH n8n SETUP COMPLETE!"
+echo "✓ FRESH n8n SETUP COMPLETE!"
 echo "Access: http://localhost:5678"
 echo "=========================================="
+echo ""
+echo "Your data is safe. To reset everything:"
+echo "  1. Run: bash CLEANUP-FIRST.sh"
+echo "  2. Then: bash SETUP-FRESH.sh"
