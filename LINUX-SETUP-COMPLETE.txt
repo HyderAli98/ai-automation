@@ -1,0 +1,145 @@
+# LINUX (E5450) COMPLETE SETUP GUIDE
+
+## BEFORE YOU START
+
+Make sure you have:
+- Linux system (Ubuntu/Debian)
+- Terminal access
+- GitHub account with ai-automation repo
+
+---
+
+## STEP 1: Download Setup Script
+
+Open Terminal on your E5450 laptop and run:
+
+```bash
+cd ~
+curl -O https://raw.githubusercontent.com/HyderAli98/ai-automation/main/setup-linux-complete.sh
+chmod +x setup-linux-complete.sh
+```
+
+Or manually download from GitHub and save to home directory.
+
+---
+
+## STEP 2: Run Complete Setup
+
+```bash
+bash setup-linux-complete.sh
+```
+
+This script will:
+
+✓ Check if Git is installed (install if needed)
+✓ Check if Docker is installed (install if needed)
+✓ Create ~/ai-automation directory
+✓ Clone from GitHub
+✓ Verify all files exist
+✓ Check Docker volumes
+✓ Look for backup files
+✓ Stop existing containers
+✓ Start Docker containers
+✓ Wait for services to start
+✓ Verify containers running
+✓ Test PostgreSQL connection
+✓ Restore backup if found
+✓ Display final verification
+
+---
+
+## STEP 3: Verify Setup
+
+When script completes, you should see:
+
+```
+✓ SETUP COMPLETE!
+
+Access n8n: http://localhost:5678
+```
+
+---
+
+## STEP 4: Access n8n
+
+Open browser and go to: **http://localhost:5678**
+
+Create admin account on first access.
+
+---
+
+## STEP 5: Sync Data from Z440
+
+If you have workflows on Z440:
+
+**On Z440:**
+```bash
+docker exec n8n-postgres pg_dump -U n8n n8n > n8n-backup.sql
+git add n8n-backup.sql
+git commit -m "Backup workflows"
+git push origin main
+```
+
+**On E5450:**
+```bash
+cd ~/ai-automation
+git pull origin main
+bash setup-linux-complete.sh
+```
+
+It will ask to restore the backup automatically!
+
+---
+
+## TROUBLESHOOTING
+
+**Containers not starting:**
+```bash
+cd ~/ai-automation
+docker-compose logs n8n
+docker-compose logs postgres
+```
+
+**Docker permission denied:**
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+**Port already in use:**
+```bash
+cd ~/ai-automation
+docker-compose down
+docker-compose up -d
+```
+
+**Need to verify manually:**
+```bash
+cd ~/ai-automation
+docker ps
+docker volume ls
+ls -la
+```
+
+---
+
+## IMPORTANT NOTES
+
+1. Script checks if folder already exists and asks before deleting
+2. Script verifies all files from GitHub
+3. Script checks Docker volumes exist
+4. Script tests PostgreSQL connection
+5. Script can restore backup files automatically
+6. Can run script multiple times safely
+
+---
+
+## SUPPORT
+
+If something fails:
+1. Read the error message carefully
+2. Check logs: `docker-compose logs`
+3. Verify Docker is running: `docker ps`
+4. Make sure Git repository exists: `ls -la ~/ai-automation/.git`
+
+Done! You now have complete n8n setup with data sync.
