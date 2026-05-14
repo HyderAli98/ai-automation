@@ -1,0 +1,67 @@
+# Z440 FRESH START - COMPLETE INSTRUCTIONS
+
+## STEP 1: CLEANUP EVERYTHING
+
+Open Git Bash on Z440 and run:
+
+```bash
+cd /e/ai/projects
+bash CLEANUP-FIRST.sh
+```
+
+This will:
+- Stop all n8n containers
+- Delete all volumes and data
+- Remove all old files
+- Clean Docker system
+
+Wait for completion.
+
+## STEP 2: SETUP FRESH n8n
+
+After cleanup, run:
+
+```bash
+bash SETUP-FRESH.sh
+```
+
+This will:
+- Create docker-compose.yml
+- Create README.md
+- Create .gitignore
+- Initialize Git
+- Push to GitHub
+- Start n8n containers
+
+Wait 30 seconds for containers to start.
+
+## STEP 3: VERIFY
+
+Check containers are running:
+
+```bash
+docker ps
+```
+
+You should see:
+- n8n-app (port 5678)
+- n8n-postgres (port 5432)
+
+## STEP 4: ACCESS n8n
+
+Open browser: http://localhost:5678
+
+Create admin account.
+
+## DONE!
+
+Fresh n8n is running on Z440 and pushed to GitHub.
+
+Next: Clone on E5450 laptop:
+```bash
+git clone https://github.com/HyderAli98/ai-automation.git
+cd ai-automation
+docker-compose up -d
+```
+
+Access laptop at: http://localhost:5678
