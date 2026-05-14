@@ -1,0 +1,56 @@
+# LAPTOP SETUP INSTRUCTIONS
+
+Follow these commands exactly in order on your E5450 Linux laptop.
+
+## Step 1: Open Terminal
+
+```bash
+sudo apt update
+sudo apt install -y git
+```
+
+## Step 2: Clone Project
+
+```bash
+cd ~
+git clone https://github.com/HyderAli98/ai-automation.git
+cd ai-automation
+```
+
+## Step 3: Start n8n
+
+```bash
+docker-compose up -d
+```
+
+## Step 4: Wait 30 seconds, then check
+
+```bash
+docker ps
+```
+
+You should see:
+- n8n-app (port 5678)
+- n8n-postgres (port 5432)
+
+## Step 5: Open Browser
+
+Go to: **http://localhost:5678**
+
+Create admin account on first access.
+
+## Step 6: Sync Workflows from Z440
+
+When you backup workflows on Z440:
+
+```bash
+git pull origin main
+docker exec -i n8n-postgres psql -U n8n n8n < n8n-backup.sql
+docker-compose restart n8n
+```
+
+Then refresh browser at http://localhost:5678
+
+## Done!
+
+All data is automatic. No other settings needed.
